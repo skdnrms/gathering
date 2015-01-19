@@ -1,0 +1,108 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>내 소모임</title>
+<%@ include file="../common/common.jsp"%>
+</head>
+<body>
+	<c:set var="active" value="my"></c:set>
+	<%@ include file="../common/navigation.jsp"%>
+	
+	<div class="col-lg-8  col-lg-offset-2">
+		<!-- title -->
+		
+			
+		
+		
+		
+		<fieldset>
+			<legend>
+				<div class="bs-component">
+					<h2> My Study Groups </h2>
+				</div>
+			</legend>
+		<c:choose>
+			<c:when test="${myAllGat[0] == null }">
+				<div class="jumbotron">
+				
+					<h3>스터디 모임에 가입해 보세요.</h3>
+					
+					<button class="btn btn-default" onclick="location.href='${ContextPath}/gathering'"><span class="icon-undo2"></span> 모임가입하기</button>
+					<button class="btn btn-default" onclick="history.back()"><span class="icon-undo2"></span> 되돌아가기</button>
+				</div>
+			</c:when>
+			<c:otherwise>
+			
+			
+		
+		<ul class="nav nav-tabs" style="margin-bottom: 15px;">
+			<li class="active"><a href="#home" data-toggle="tab">모든모임</a></li>
+			<c:if test="${myMasterGat[0] != null}">
+				<li><a href="#profile" data-toggle="tab">관리자모임</a></li>
+			</c:if>
+		</ul>
+		<div id="myTabContent" class="tab-content">
+		
+			<!-- 나의 모든 모임 -->
+			<div class="tab-pane fade active in" id="home">
+				<div class="media-list">
+					<c:forEach var="myGroup" items="${myAllGat }">
+						<div class="media">
+							<a class="pull-left" href="${ContextPath}/gathering/group?gid=${myGroup.gid}"> 
+								<img class="media-object img-rounded" src="${ContextPath}/resources/shared/img/group/${myGroup.photo}" style="width: 70px; height: 70px;">
+							</a>
+							<div class="media-body">
+								<div class="media">
+									<c:if test="${!MasterGradeTest[myGroup.gid]}">
+										<input type="button" class="pull-right btn btn-primary" value="탈퇴" onclick=location.href="${ContextPath }/gathering/dropGat?gid=${myGroup.gid }">
+									</c:if>
+									<div class="media-body">
+										<h4 class="media-heading">${myGroup.name}</h4>
+										<div class="caption">
+											<p>${myGroup.introduction}</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</c:forEach>
+				</div>
+			</div>
+			
+			
+			<!-- 나의 관리자등급 모임 -->
+			<c:if test="${myMasterGat[0] != null}">
+			<div class="tab-pane fade" id="profile">
+				<div>
+					<ul class="media-list">
+						<c:forEach var="myMasterGat" items="${myMasterGat}">
+							<div class="media">
+								<a class="pull-left" href="${ContextPath}/gathering/group?gid=${myMasterGat.gid}"> 
+									<img class="media-object img-rounded" src="${ContextPath}/resources/shared/img/group/${myMasterGat.photo}" style="width: 100px; height: 100px;">
+								</a>
+								<div class="media-body">
+									<div class="media">
+										<%-- <input type="button" class="pull-right btn btn-primary" value="탈퇴" onclick=location.href="${ContextPath }/gathering/dropGat?gid=${myGroup.gid }"> --%>
+										<div class="media-body">
+											<h4 class="media-heading">${myMasterGat.name}</h4>
+											<div class="caption">
+												<p>${myMasterGat.introduction}</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</c:forEach>
+					</ul>
+				</div>
+			</div>
+			</c:if>
+		</div>
+		
+			</c:otherwise>
+		</c:choose>
+		</fieldset>
+	</div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+package kr.kosta.gathering.util;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class FieldConvertUtil {
+	
+	private static Map<String, String> FIELD_MAP;
+	
+	static {
+		FIELD_MAP = new HashMap<String, String>();
+		FIELD_MAP.put("001", "어학");
+		FIELD_MAP.put("002", "IT");
+		FIELD_MAP.put("003", "취업");
+		FIELD_MAP.put("004", "기타");
+	}
+	
+	public static String fieldNumberConverter(String fieldCode){
+		return FIELD_MAP.get(fieldCode);
+	}
+	
+}

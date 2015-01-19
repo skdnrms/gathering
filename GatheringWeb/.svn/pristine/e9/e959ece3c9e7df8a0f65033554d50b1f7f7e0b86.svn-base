@@ -1,0 +1,114 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>사용자 정보</title>
+<%@ include file="../common/common.jsp"%>
+<script src="${ContextPath}/resources/shared/js/location.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		
+		function readURL(input) {
+			if(input.files && input.files[0]) {
+				
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					
+					$("#userPhoto").attr("src", e.target.result);
+				};
+				
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+		
+		$("#photo").change(function() {
+			
+			readURL(this);
+		});
+		
+		var locationValue = $("#locationHid").val();
+		$("option[value=" + locationValue +"]").attr("selected", true);
+		
+		$("#updateBtn").click(function() {
+		
+			var password = $("#password").val();
+			var identifiedPassword = $("#identifiedPassword").val();
+			if((password.length != 0 || identifiedPassword.length != 0) && (password != identifiedPassword ? true : false)) {
+				alert("변경된 비밀번호가 일치하지 않습니다");
+			} else {
+				$("#userInfoForm").submit();
+			}
+		});
+	});
+</script>
+
+</head>
+<body>
+<%@ include file="../common/navigation.jsp"%>
+	<div class="col-lg-4 col-lg-offset-4">
+	<fieldset>
+		<legend>
+			사용자 정보
+		</legend>
+		<form class="bs-component" method="post" enctype="multipart/form-data" 
+		id="userInfoForm" action="${ContextPath }/updateMember.do">
+			<div class="form-group">
+				<label class="control-label" for="inputDefault">프로필</label>&nbsp;
+				<img src="${ContextPath }/resources/shared/img/member/${userInfo.photo}" id="userPhoto" width="100" height="100">
+			</div>
+			<div class="form-group">
+				<input type="file" id="photo" name="photoFile">
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="inputDefault">이메일</label> 
+				<label id="useableId"></label> 
+				<input type="email" class="form-control" id="email" name="email" value="${userInfo.email }" readonly>
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="inputDefault">새로운 비밀번호</label> 
+				<input type="password" class="form-control" id="password" name="password">
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="inputDefault">비밀번호 확인</label> 
+				<input type="password" class="form-control" id="identifiedPassword">
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="inputDefault">이름</label> 
+				<input type="text" class="form-control" name="name" value="${userInfo.name }" readonly>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label" for="inputDefault">전화번호</label> 
+				<input type="tel" class="form-control" name="phone" value="${userInfo.phone }" required>
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="inputDefault">성별</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				남 <input type="radio" name="gender" value="m" ${(userInfo.gender eq 'm') ? 'checked' : '' }>&nbsp; 
+				여 <input type="radio" name="gender" value="f" ${(userInfo.gender ne 'm') ? 'checked' : '' }>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-6 col-md-6">
+						<label class="control-label" for="inputDefault">생일</label> 
+						<input class="form-control" type="date" name="userBirthday" value="${userInfo.formatDate }" readonly>
+					</div>
+					<div class="col-xs-6 col-md-6">
+						<label class="control-label" for="inputDefault">지역</label> 
+						<input type="hidden" id="locationHid" value="${userInfo.location }">
+						<select class="form-control" name="location" id="location"></select>
+					</div>
+				</div>
+			</div>
+			<div class="btn-group btn-group-justified" align="right" style="margin-bottom:10px">
+			<div class="btn-group">
+			<input type="button" class="btn btn-primary btn-lg" id="updateBtn" value="수정하기">
+			</div>
+			<div class="btn-group">
+			<input type="button" class="btn btn-default btn-lg" id="cancelBtn" value="취소" onclick="window.history.back()">
+			</div>
+			</div>
+		</form>
+	</fieldset>
+	</div>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>메인화면</title>
+<%@ include file="../common/common.jsp"%>
+
+<link href="/GatheringWeb/resources/shared/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+<link href="/GatheringWeb/resources/shared/css/fullcalendar.css" rel="stylesheet" type="text/css" />
+<link href="/GatheringWeb/resources/shared/css/fullcalendar.print.css" rel="stylesheet" type="text/css" media='print' />
+
+
+<script src="/GatheringWeb/resources/shared/js/fullcalendar.min.js" type="text/javascript"></script>
+<script src="/GatheringWeb/resources/shared/js/gatheringfullcalendar.js" type="text/javascript"></script>
+<script src="/GatheringWeb/resources/shared/js/app.js" type="text/javascript"></script>
+<script type="text/javascript">
+	
+	var noticeCnt;
+	
+	$(document).ready(function() {
+		
+		noticeCnt = $("#noticeCnt").val();
+	});
+	
+	// 공지사항 new 심볼 숨기기 효과
+	function deleteNotice(element) {
+		
+		var noticeInfo = $(element).parents(".box-tools.pull-right").children("[type='hidden']");
+		
+		var nid = $(noticeInfo[0]).val();
+		var gid = $(noticeInfo[1]).val();
+		
+		var request = $.ajax({
+			url: "gathering/identifiedNotice.ajax"
+			, type: "get"
+			, data: {"nid" : nid, "gid" : gid}
+			, datatype: "html"
+		});
+		
+		--noticeCnt;
+		if(noticeCnt === 0) {
+			$("#newNoticeAlarm").attr("style", "VISIBILITY:hidden;display:none");
+		}
+	};	
+</script>
+
+<style type="text/css">
+	/* 긴문장을 "..."으로 줄이는 설정 */
+	.ellipsis {text-overflow:ellipsis; white-space:nowrap; overflow:hidden;}
+</style>
+</head>
+<body>
+	<c:set var="active" value="home"></c:set>
+	<%@ include file="../common/navigation.jsp"%>
+	<div class="col-lg-8 col-lg-offset-2">
+		<div class="media">
+			<span class="pull-left"> 
+				<img class="media-object img-rounded" src="${ContextPath }/resources/shared/img/member/${userInfo.photo}" style="width: 64px; height: 64px;">
+			</span>
+			<div class="media-body">
+				<h5 class="media-heading">${userInfo.name }&nbsp;&nbsp;${birthday }&nbsp;&nbsp;${userInfo.location } </h5>
+				${userInfo.email }
+			</div>
+		</div>
+		<br>
+		<fieldset>
+			<legend>스터디 알람</legend>
+			일주일간 스터디 일정 공지
+			
+			<legend>달력</legend>
+			<c:forEach var="registGathering" items="${userInfo.registGatherings }">
+				<input class="gatheingGids" type="hidden" value="${registGathering.gid}">
+			</c:forEach>
+			<!-- THE CALENDAR -->
+			<div id="calendar" class="col-xs-12 col-md-10 col-md-offset-1"></div>
+			
+			<legend><br>
+			공지사항<c:if test="${newNotice ne null }">&nbsp;<span class="badge" id="newNoticeAlarm">new</span></c:if>
+			<input type="hidden" value=${noticeCnt } id="noticeCnt">
+			</legend>
+			<c:forEach var="notice" items="${newNotice}">
+			<div class="col-md-4 col-xs-12">
+				<!-- Danger box -->
+				<div class="box box-solid box-danger">
+					<div class="box-header">
+						<h3 class="box-title"><span class="ellipsis"><nobr>${notice.title }</nobr></span></h3>
+						<div class="box-tools pull-right">
+							<input type="hidden" value="${notice.nid }">
+							<input type="hidden" value="${notice.gid }">
+							<button class="btn btn-default btn-sm" data-widget="remove" onclick="deleteNotice(this)">
+							<span class="icon-switch"></span>
+							</button>
+						</div>
+					</div>
+					<div class="box-body">
+						<p>
+							${notice.comment }
+						</p>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<!-- /.box -->
+			</div>
+			</c:forEach>
+			<legend>새로운 회원</legend>
+			<c:forEach var="newMember" items="${newMembers }">
+			</c:forEach>
+		</fieldset>
+	</div>
+</body>
+</html>

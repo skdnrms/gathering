@@ -1,0 +1,55 @@
+package kr.kosta.gathering.util;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class FieldConvertUtil {
+	
+/*	private static Map<String, String> FIELD_MAP;
+	
+	static {
+		FIELD_MAP = new HashMap<String, String>();
+		FIELD_MAP.put("001", "어학");
+		FIELD_MAP.put("002", "IT");
+		FIELD_MAP.put("003", "취업");
+		FIELD_MAP.put("004", "기타");
+	}*/
+	
+	private static Map<String, String> FIELD_MAP;
+	
+	static {
+		FIELD_MAP = new HashMap<String, String>();
+		
+		FIELD_MAP.put("A01", "어학");
+		FIELD_MAP.put("A02", "IT");
+		FIELD_MAP.put("A03", "취업");
+		FIELD_MAP.put("A04", "기타");
+		
+		FIELD_MAP.put("B01", "영어");
+		FIELD_MAP.put("B02", "일어");
+		FIELD_MAP.put("B03", "중국어");
+		FIELD_MAP.put("B04", "독일어");
+		FIELD_MAP.put("B05", "JAVA");
+		FIELD_MAP.put("B06", "C");
+		FIELD_MAP.put("B07", "리눅스");
+		FIELD_MAP.put("B08", "윈도우");
+		FIELD_MAP.put("B09", "취업");
+		FIELD_MAP.put("B10", "기타");
+		
+		FIELD_MAP.put("C01", "test1");
+		FIELD_MAP.put("C02", "test2");
+		FIELD_MAP.put("C03", "test3");
+		FIELD_MAP.put("C04", "test4");
+		FIELD_MAP.put("C05", "test5");
+		FIELD_MAP.put("C06", "test6");
+		FIELD_MAP.put("C07", "test7");
+		FIELD_MAP.put("C08", "test8");
+		
+	}
+	
+	public static String fieldNumberConverter(String fieldCode){
+		return FIELD_MAP.get(fieldCode);
+	}
+	
+}

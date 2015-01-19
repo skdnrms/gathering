@@ -1,0 +1,274 @@
+-- MySQL dump 10.13  Distrib 5.6.17, for Win64 (x86_64)
+--
+-- Host: localhost    Database: gathering
+-- ------------------------------------------------------
+-- Server version	5.6.17
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `curriculum`
+--
+
+DROP TABLE IF EXISTS `curriculum`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `curriculum` (
+  `gid` int(11) NOT NULL COMMENT '모임_시퀀스',
+  `cid` int(11) NOT NULL AUTO_INCREMENT COMMENT '커리_시퀀스',
+  `title` varchar(255) NOT NULL COMMENT '제목',
+  `comment` text COMMENT '내용',
+  `date` date DEFAULT NULL COMMENT '진행일',
+  `chap_cnt` int(11) NOT NULL COMMENT '챕터순서',
+  PRIMARY KEY (`cid`)
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8 COMMENT='커리큘럼';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `curriculum`
+--
+
+LOCK TABLES `curriculum` WRITE;
+/*!40000 ALTER TABLE `curriculum` DISABLE KEYS */;
+INSERT INTO `curriculum` VALUES (12,42,'1','','2014-04-02',1),(12,43,'2','2','2014-04-18',2),(12,44,'6','6',NULL,3),(12,45,'rrr','rrr','2014-04-15',4);
+/*!40000 ALTER TABLE `curriculum` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `gathering`
+--
+
+DROP TABLE IF EXISTS `gathering`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `gathering` (
+  `gid` int(11) NOT NULL AUTO_INCREMENT COMMENT '모임_시퀀스',
+  `name` varchar(50) NOT NULL COMMENT '이름',
+  `location` varchar(30) DEFAULT NULL COMMENT '지역',
+  `field` varchar(50) NOT NULL COMMENT '분야',
+  `time` varchar(10) DEFAULT NULL COMMENT '시간',
+  `date` varchar(50) DEFAULT NULL COMMENT '요일',
+  `population` int(11) DEFAULT NULL COMMENT '최대회원수',
+  `introduction` varchar(255) DEFAULT NULL COMMENT '소개글',
+  `photo` varchar(100) DEFAULT NULL COMMENT '사진',
+  `start_date` date DEFAULT NULL COMMENT '시작일',
+  `end_date` date DEFAULT NULL COMMENT '종료일',
+  PRIMARY KEY (`gid`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='모임';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `gathering`
+--
+
+LOCK TABLES `gathering` WRITE;
+/*!40000 ALTER TABLE `gathering` DISABLE KEYS */;
+INSERT INTO `gathering` VALUES (1,'test','인천','001','09:00','mon,tue,wed,thu,fri',17,'test','group-defult.jpg','2013-01-11','2014-01-09'),(2,'123','서울','002','',NULL,2,'','group-defult.jpg','2014-04-14','2014-04-14'),(4,'test123','경기','003','02:03','mon,tue,wed,thu',17,'ggg','group-defult.jpg','2014-04-08',NULL),(5,'kosta66기 모여라~~~','서울','004','09:00','mon,tue,wed,thu,fri',10,'코스타 66기모임에 오신것을 환영합니다. 재미있는 시간보내요~~','group-defult.jpg','2014-04-06','2014-04-26'),(6,'hahaha','인천','001','02:03','sun,sat',7,'hahahaha한글hahahahahahahahahhohohohohohohoohoh','group-defult.jpg','2014-04-08','2014-04-25'),(8,'한글로합시다...ㅋ','서울','002','',NULL,2,'','group-defult.jpg',NULL,NULL),(9,'gathering','서울','003','',NULL,2,'','group-defult.jpg',NULL,NULL),(10,'hahahagathering','서울','004','',NULL,2,'','group-defult.jpg',NULL,NULL),(11,'한글테스트.....하하하하하하하','서울','001','',NULL,15,'한글입니다.ㅣ나ㅓㅣㅏㅓdkjlkdjlkwjlknlknlkdn','group-defult.jpg',NULL,NULL),(12,'yyy','서울','003','17:00',NULL,2,'','test@test.com_Jellyfish.jpg',NULL,NULL),(13,'test gatherings','울산','003,001,001','16:00','mon,tue,fri',14,'hahaha','test@test.com_Hydrangeas.jpg','2014-04-17',NULL);
+/*!40000 ALTER TABLE `gathering` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `identified_notice`
+--
+
+DROP TABLE IF EXISTS `identified_notice`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `identified_notice` (
+  `email` varchar(40) NOT NULL COMMENT '이메일',
+  `nid` int(11) NOT NULL COMMENT '공지_시퀀스',
+  `gid` int(11) NOT NULL COMMENT '모임_시퀀스'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='공지사항 알람';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `identified_notice`
+--
+
+LOCK TABLES `identified_notice` WRITE;
+/*!40000 ALTER TABLE `identified_notice` DISABLE KEYS */;
+/*!40000 ALTER TABLE `identified_notice` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `identified_qna`
+--
+
+DROP TABLE IF EXISTS `identified_qna`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `identified_qna` (
+  `email` varchar(40) NOT NULL COMMENT '이메일',
+  `qid` int(11) NOT NULL COMMENT '질문_시퀀스',
+  `gid` int(11) NOT NULL COMMENT '모임_시퀀스'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='QnA 알람';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `identified_qna`
+--
+
+LOCK TABLES `identified_qna` WRITE;
+/*!40000 ALTER TABLE `identified_qna` DISABLE KEYS */;
+/*!40000 ALTER TABLE `identified_qna` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `member`
+--
+
+DROP TABLE IF EXISTS `member`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `member` (
+  `email` varchar(40) NOT NULL COMMENT '이메일',
+  `name` varchar(50) NOT NULL COMMENT '이름',
+  `phone` varchar(30) NOT NULL COMMENT '전화번호',
+  `birthday` date DEFAULT NULL COMMENT '생일',
+  `gender` varchar(1) DEFAULT NULL COMMENT '성별',
+  `location` varchar(30) DEFAULT NULL COMMENT '지역',
+  `photo` varchar(100) DEFAULT NULL COMMENT '사진',
+  `password` varchar(225) NOT NULL COMMENT '비밀번호',
+  PRIMARY KEY (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='회원';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `member`
+--
+
+LOCK TABLES `member` WRITE;
+/*!40000 ALTER TABLE `member` DISABLE KEYS */;
+INSERT INTO `member` VALUES ('skdnrms','이우근','012-3456-7890','1986-05-23','m','인천','member-defult.png','123'),('test2@test.com','고길동','010-2222-2222','2014-04-25','m','경기','member-defult.png','1234'),('test@test.com','홍길동','010-1234-1234','2014-01-01','m','경기','test@test.com_roopi.jpg','1234');
+/*!40000 ALTER TABLE `member` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `notice`
+--
+
+DROP TABLE IF EXISTS `notice`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `notice` (
+  `gid` int(11) NOT NULL COMMENT '모임_시퀀스',
+  `nid` int(11) NOT NULL AUTO_INCREMENT COMMENT '공지_시퀀스',
+  `title` varchar(255) NOT NULL COMMENT '제목',
+  `comment` text NOT NULL COMMENT '내용',
+  `email` varchar(40) NOT NULL COMMENT '이메일',
+  `regist_date` date NOT NULL COMMENT '등록일',
+  PRIMARY KEY (`nid`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='공지사항';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notice`
+--
+
+LOCK TABLES `notice` WRITE;
+/*!40000 ALTER TABLE `notice` DISABLE KEYS */;
+INSERT INTO `notice` VALUES (12,1,'test','test중....','test@test.com','2014-04-08'),(12,2,'33333','44444','test@test.com','2014-04-22'),(12,3,'5555','66666','test@test.com','2014-04-27'),(12,4,'6666','6666','test@test.com','2014-04-29');
+/*!40000 ALTER TABLE `notice` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `qna`
+--
+
+DROP TABLE IF EXISTS `qna`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `qna` (
+  `gid` int(11) NOT NULL COMMENT '모임_시퀀스',
+  `qid` int(11) NOT NULL AUTO_INCREMENT COMMENT '질문_시퀀스',
+  `comment` varchar(255) NOT NULL COMMENT '내용',
+  `regist_date` date NOT NULL COMMENT '등록일',
+  `email` varchar(40) NOT NULL COMMENT '이메일',
+  PRIMARY KEY (`qid`)
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8 COMMENT='QnA';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `qna`
+--
+
+LOCK TABLES `qna` WRITE;
+/*!40000 ALTER TABLE `qna` DISABLE KEYS */;
+INSERT INTO `qna` VALUES (12,1,'질문있습니다......ㅋㅋ','2014-04-29','test@test.com'),(12,2,'hahahaha','2014-04-29','test@test.com'),(12,3,'sadasdasdasd','2014-04-29','test@test.com'),(12,4,'tttttt','2014-04-29','test@test.com'),(12,5,'test','2014-04-29','test@test.com'),(12,6,'test.....hahahahaha','2014-04-29','test@test.com'),(12,7,'test...아오...진짜...','2014-04-29','test@test.com'),(12,8,'dkdkdkdkdkdkfjfjfjfjfjfjfj','2014-04-29','test@test.com'),(12,9,'ffffff','2014-04-29','test@test.com'),(12,10,'gkgkkgkgkgkgkkgkgkgkkgkalkjg;lgkjalksjfljs;lfkj;lksja;lkjfl;wkn;kbjnt;jsf;aijavno;iejrlahweh;lkhrv;lfsn;as;ldfvsnlhvahs;lgh;vanshgv;lsnh;ldkvh;lsknhv;lwhebgvklvjngfkwnh;dkfvhs;infnhv;aslkdfvskldjfkjalvknwehnvkjhbaldkjsfnha','2014-04-29','test@test.com'),(12,11,'assdfasfasfdaadfasdf','2014-04-29','test@test.com'),(12,12,'assdfasfasfdaadfasdfasdfsadf','2014-04-29','test@test.com'),(12,13,'asdfasf','2014-04-29','test@test.com'),(12,14,'safasfadfa','2014-04-29','test@test.com'),(12,15,'trhfgh','2014-04-29','test@test.com'),(12,16,'젠장....','2014-04-29','test@test.com'),(12,17,'test','2014-04-30','test@test.com'),(12,18,'gkgkgkgkgkgk','2014-04-30','test@test.com'),(12,19,'sssssss','2014-04-30','test@test.com'),(12,20,'gggggg','2014-04-30','test@test.com'),(12,21,'fffffffffffffff','2014-04-30','test@test.com'),(12,22,'tsetdddd','2014-04-30','test@test.com'),(12,23,'sdfsdgwegw','2014-04-30','test@test.com'),(12,24,'adsqwgwg','2014-04-30','test@test.com'),(12,25,'asdfasdf','2014-04-30','test@test.com'),(12,26,'sdfawtwdsfsdfsdf','2014-04-30','test@test.com'),(12,27,'sdsssssssssssssssss','2014-04-30','test@test.com'),(12,28,'test.....','2014-04-30','test@test.com'),(12,29,'sdfsdfsdf','2014-04-30','test@test.com'),(12,30,'fffffff','2014-04-30','test@test.com'),(5,31,'test','2014-04-30','test@test.com'),(5,32,'testsssssss','2014-04-30','test@test.com'),(5,33,'testsssssssffff','2014-04-30','test@test.com'),(5,34,'fffdddeeerrryyy','2014-04-30','test@test.com'),(5,35,'rrrrr','2014-04-30','test@test.com'),(5,36,'asdfwhg','2014-04-30','test@test.com'),(5,37,'sdfwwwwwww','2014-04-30','test@test.com'),(5,38,'sdfwwwwwww','2014-04-30','test@test.com'),(5,39,'ffffwwwwwwgsdsdfsdf','2014-04-30','test@test.com'),(10,40,'test...입니다.','2014-04-30','test@test.com'),(13,41,'ggg','2014-04-30','test@test.com'),(12,42,'test////','2014-04-30',''),(5,43,'222','2014-04-30','test@test.com'),(5,44,'test','2014-04-30','test@test.com'),(5,45,'test','2014-04-30','test@test.com'),(6,46,'ttttt','2014-04-30','test@test.com'),(6,47,'fff','2014-04-30','test@test.com'),(4,48,'rewersrrr','2014-04-30','test@test.com'),(4,49,'test','2014-04-30','test@test.com'),(4,50,'testsss','2014-04-30','test@test.com'),(4,51,'fffff','2014-04-30','test@test.com'),(4,52,'hhhh','2014-04-30','test@test.com'),(4,53,';','2014-04-30','test@test.com'),(4,54,'.media','2014-04-30','test@test.com'),(4,55,'1235','2014-04-30','test@test.com'),(4,56,'sdfsdf','2014-04-30','test@test.com'),(4,57,'sdfsdfsdfsdf','2014-04-30','test@test.com');
+/*!40000 ALTER TABLE `qna` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `regis_gathering`
+--
+
+DROP TABLE IF EXISTS `regis_gathering`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `regis_gathering` (
+  `email` varchar(40) NOT NULL COMMENT '이메일',
+  `gid` int(11) NOT NULL COMMENT '모임_시퀀스',
+  `grade` varchar(10) NOT NULL COMMENT '회원등급',
+  PRIMARY KEY (`email`,`gid`),
+  KEY `FK_gathering_TO_regis_gathering` (`gid`),
+  CONSTRAINT `FK_gathering_TO_regis_gathering` FOREIGN KEY (`gid`) REFERENCES `gathering` (`gid`),
+  CONSTRAINT `FK_member_TO_regis_gathering` FOREIGN KEY (`email`) REFERENCES `member` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='가입된모임';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `regis_gathering`
+--
+
+LOCK TABLES `regis_gathering` WRITE;
+/*!40000 ALTER TABLE `regis_gathering` DISABLE KEYS */;
+INSERT INTO `regis_gathering` VALUES ('test2@test.com',2,'J'),('test2@test.com',12,'J'),('test@test.com',4,'J'),('test@test.com',5,'J'),('test@test.com',6,'J'),('test@test.com',10,'J'),('test@test.com',12,'M'),('test@test.com',13,'M');
+/*!40000 ALTER TABLE `regis_gathering` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `reply`
+--
+
+DROP TABLE IF EXISTS `reply`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `reply` (
+  `qid` int(11) NOT NULL COMMENT '질문_시퀀스',
+  `rid` int(11) NOT NULL AUTO_INCREMENT COMMENT '답글_시퀀스',
+  `comment` varchar(255) NOT NULL COMMENT '내용',
+  `regist_date` date NOT NULL COMMENT '등록일',
+  `email` varchar(40) NOT NULL COMMENT '이메일',
+  PRIMARY KEY (`rid`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='답글목록';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reply`
+--
+
+LOCK TABLES `reply` WRITE;
+/*!40000 ALTER TABLE `reply` DISABLE KEYS */;
+INSERT INTO `reply` VALUES (28,1,'test....hahaha','2014-04-30','test@test.com'),(27,2,'호호호','2014-04-30','test@test.com'),(30,3,'테스트....','2014-04-30','test@test.com'),(30,4,'호호호','2014-04-30','test@test.com'),(30,5,'아앙','2014-04-30','test@test.com'),(30,6,'어엉','2014-04-30','test@test.com'),(30,7,'커텅','2014-04-30','test@test.com'),(30,8,'test','2014-04-30','test@test.com'),(27,9,'키키킥','2014-04-30','test@test.com'),(27,10,'뚜루루루루룰ㄹ','2014-04-30','test@test.com'),(30,11,'sdfadf','2014-04-30','test2@test.com'),(30,12,'dsfwwwww','2014-04-30','test2@test.com'),(29,13,'hahaha','2014-04-30','test2@test.com'),(29,14,'ggg','2014-04-30','test2@test.com'),(29,15,'test','2014-04-30','test2@test.com'),(28,16,'test,,,,','2014-04-30','test2@test.com'),(28,17,'tttttt','2014-04-30','test2@test.com'),(28,18,'hhadfad','2014-04-30','test2@test.com'),(27,19,'ghglglgl','2014-04-30',''),(46,20,'rewss','2014-04-30','test@test.com'),(46,21,'test','2014-04-30','test@test.com');
+/*!40000 ALTER TABLE `reply` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2014-04-30 17:26:55

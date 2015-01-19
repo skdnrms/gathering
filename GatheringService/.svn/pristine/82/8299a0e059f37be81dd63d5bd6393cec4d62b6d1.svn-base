@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.kosta.gathering.reunion.mapper.GatheringMapper">
+	
+	<insert id="inertGathering" parameterType="Gathering">
+		INSERT INTO gathering(name, location, field, time, date, population, introduction, start_date, end_date)
+		VALUES (#{name}, #{location}, #{field}, #{time}, #{date}, #{population}, #{introduction}, #{startDate}, #{endDate})
+			<selectKey keyProperty="gid" resultType="Integer" order="AFTER">
+				SELECT LAST_INSERT_ID()
+			</selectKey>
+	</insert>
+	
+	<select id="selectGatheringName" parameterType="String" resultType="String">
+		SELECT name
+		FROM gathering
+		WHERE name=#{name}
+	</select>
+	
+	<select id="selectAllGathering" resultType="Gathering">
+		SELECT gid
+			, name
+			, location
+			, field
+			, time
+			, date
+			, photo
+			, population
+			, introduction
+			, start_date AS startDate
+			, end_date AS endDate
+		FROM gathering
+	</select>
+	
+	<select id="selectAllMyGathering" parameterType="String" resultType="Gathering">
+		SELECT gid
+			, name
+			, location
+			, field
+			, time
+			, date
+			, photo
+			, population
+			, introduction
+			, start_date AS startDate
+			, end_date AS endDate
+		FROM gathering
+		WHERE gid in (SELECT gid
+						FROM regis_gathering
+						WHERE email = #{email})
+	</select>
+	
+	<select id="selectGathering" parameterType="Integer" resultType="Gathering">
+		SELECT gid
+			, name
+			, location
+			, field
+			, time
+			, date
+			, photo
+			, population
+			, introduction
+			, start_date AS startDate
+			, end_date AS endDate
+		FROM gathering
+		WHERE gid = #{gid}
+	</select>
+	
+	<select id="selectSearchGathering" parameterType="Gathering" resultType="Gathering">
+		SELECT gid
+			, name
+			, location
+			, field
+			, time
+			, date
+			, photo
+			, population
+			, introduction
+			, start_date AS startDate
+			, end_date AS endDate
+		FROM gathering
+		WHERE
+			<!-- 지역검색 --> 
+			<if test='location != null'>
+				location = #{location}
+				OR
+				location IS NULL
+				AND
+			</if>
+			
+			<!-- 분야검색 -->
+			<if test="field != null">
+				<choose>
+					<when test="field.length() == 3">
+						substring(field, 1, 3) IN(#{field})
+						AND
+					</when>
+					<when test="field.length() == 7">
+						substring(field, 1, 7) IN(#{field})
+						AND
+					</when>
+					<otherwise>
+						substring(field, 1, 7) IN(#{field})
+						AND		
+					</otherwise>
+				</choose>
+			</if>
+			
+			<!-- 시간검색 -->
+			<if test='time != null'>
+				<if test='time.equals("아침")'>
+					<![CDATA[substring(time, 1, 2)  >= '06' and substring(time, 1, 2) < 12]]>
+					AND
+				</if>
+				<if test='time.equals("점심")'>
+					<![CDATA[substring(time, 1, 2)  >= '12' and substring(time, 1, 2) < 18]]>
+					AND
+				</if>
+				<if test='time.equals("저녁")'>
+					<![CDATA[substring(time, 1, 2)  >= '18' and substring(time, 1, 2) < 24]]>
+					AND
+				</if>
+			</if>
+			
+			<!-- 요일 검색 -->
+			<if test='date != null'>
+				date LIKE concat('%', substring(#{date}, 1, 3), '%')
+				<if test="date.length() == 7">
+					AND date LIKE concat('%', substring(#{date}, 4, 3), '%')
+				</if>
+				<if test="date.length() == 11">
+					AND date LIKE concat('%', substring(#{date}, 8, 3), '%')
+				</if>
+				<if test="date.length() == 15">
+					AND date LIKE concat('%', substring(#{date}, 12, 3), '%')
+				</if>
+				<if test="date.length() == 19">
+					AND date LIKE concat('%', substring(#{date}, 16, 3), '%')
+				</if>
+				<if test="date.length() == 23">
+					AND date LIKE concat('%', substring(#{date}, 20, 3), '%')
+				</if>
+				<if test="date.length() == 27">
+					AND date LIKE concat('%', substring(#{date}, 24, 3), '%')
+				</if>
+				OR date IS null
+				AND
+			</if>
+			
+			<!-- 이름검색 -->
+			name LIKE concat('%', #{name}, '%')
+	</select>
+	
+	<select id="selectGatheringMembers" parameterType="Integer" resultType="Member">
+		SELECT * 
+		FROM member
+		WHERE email IN (
+					SELECT email
+					FROM regis_gathering
+					WHERE gid = #{gid}
+		)
+	</select>
+	
+	<update id="updateGathering" parameterType="Gathering">
+		UPDATE gathering SET
+	 	location = #{location}
+	 		, time = #{time}
+			, date = #{date}
+			, photo = #{photo}
+			, population = #{population}
+			, introduction = #{introduction}
+			, start_date = #{startDate}
+			, end_date = #{endDate}
+	 	WHERE gid = #{gid}
+	</update>
+</mapper>

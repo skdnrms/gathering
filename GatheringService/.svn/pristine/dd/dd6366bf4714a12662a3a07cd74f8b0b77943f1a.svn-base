@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.kosta.gathering.specification.mapper.ReplyMapper">
+
+	<!-- QnA 답글 등록 -->
+	<insert id="insertReply" parameterType="Reply">
+		Insert into reply(qid, comment, regist_date, email)
+		values(#{qid}, #{comment}, now(), #{email})
+		<selectKey keyProperty="rid" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<!-- QnA 답글 조회 -->
+	<select id="selectReply" parameterType="int" resultType="Reply">
+		SELECT qid
+			,rid
+			,comment
+			,regist_date AS registDate
+			,email
+		FROM reply
+		WHERE rid = #{rid}
+	</select>
+	
+	<!-- QnA 답글 전체 조회 -->
+	<select id="selectAllReply" parameterType="int" resultType="Reply">
+		SELECT qid
+			,rid
+			,comment
+			,regist_date AS registDate
+			,email
+		FROM reply
+		WHERE qid IN( SELECT qid
+					  FROM qna
+					  WHERE gid = #{gid} )
+	</select>
+	
+</mapper>

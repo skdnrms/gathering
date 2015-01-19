@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.kosta.gathering.alarm.mapper.AlarmMapper">
+	
+	<insert id="insertIdentifiedNotice" parameterType="IdentifiedNotice">
+		INSERT INTO identified_notice(email, nid, gid)
+		VALUES(#{email}, #{nid}, #{gid})
+	</insert>
+	
+	<select id="selectAllIdentifiedNotice" parameterType="String" resultType="IdentifiedNotice">
+		SELECT email
+		, nid
+		, gid
+		FROM identified_notice
+		WHERE email = #{email}
+	</select>
+	
+	<select id="selectSpecifiedNotice" parameterType="IdentifiedNotice" resultType="IdentifiedNotice">
+		SELECT email
+		, nid
+		, gid
+		FROM identified_notice
+		WHERE email = #{email} AND gid = #{gid}	
+	</select>
+</mapper>

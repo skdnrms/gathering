@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.kosta.gathering.specification.mapper.CurriculumMapper">
+  
+  <insert id="insertCurriculum" parameterType="Curriculum">
+  	INSERT INTO curriculum(gid, title, comment, date, chap_cnt)
+  	VALUES(#{gid}, #{title}, #{comment}, #{date}, #{chapCnt})
+  </insert>
+  
+  <delete id="deleteCurriculum" parameterType="Integer">
+  	delete from curriculum
+  	where #{gid} = gid;
+  </delete>
+  
+  <select id="selectCurriculums" parameterType="Integer" resultType="Curriculum">
+  SELECT gid
+  , cid
+  , title
+  , comment
+  , date
+  , chap_cnt as chapCnt
+  FROM curriculum
+  WHERE gid = #{gid}
+  </select>
+  
+  <select id="selectUserCurriculums" resultType="Curriculum">
+  	SELECT gid
+	  , cid
+	  , title
+	  , comment
+	  , date
+	  , chap_cnt as chapCnt
+	FROM curriculum
+  	WHERE gid in
+	  <foreach item="gid" index="index" collection="array" open="(" separator="," close=")">
+	        #{gid}
+	  </foreach>
+  </select>
+</mapper>

@@ -1,0 +1,155 @@
+package kr.kosta.gathering.reunion.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import kr.kosta.gathering.member.domain.Member;
+import kr.kosta.gathering.reunion.domian.Gathering;
+import kr.kosta.gathering.reunion.domian.RegistGathering;
+import kr.kosta.gathering.reunion.mapper.GatheringMapper;
+import kr.kosta.gathering.reunion.mapper.RegistGatheringMapper;
+import kr.kosta.gathering.reunion.service.GatheringManager;
+
+@Service
+public class GatheringManagerImpl implements GatheringManager {
+	
+	@Autowired
+	private SqlSessionTemplate sqlSession;
+	
+	private GatheringMapper getGatheringMapper() {
+		
+		return sqlSession.getMapper(GatheringMapper.class);
+	}
+	
+	private RegistGatheringMapper getRegistGatheringMapper() {
+		
+		return sqlSession.getMapper(RegistGatheringMapper.class);
+	}
+	
+	/**
+	 * 모임 개설
+	 * @param gathering
+	 * @return
+	 */
+	@Override
+	public Integer insertGathering(Gathering gathering) {
+		
+		return getGatheringMapper().inertGathering(gathering);
+	}
+
+	/**
+	 * 모임 이름검색
+	 * @param name
+	 * @return
+	 */
+	@Override
+	public String selectGatheringName(String name) {
+		
+		return getGatheringMapper().selectGatheringName(name);
+	}
+
+	/**
+	 * 모든 모임 검색
+	 * @return
+	 */
+	@Override
+	public List<Gathering> selectAllGathering() {
+		
+		return getGatheringMapper().selectAllGathering();
+	}
+
+	/**
+	 * 가입한 모든 모임 검색
+	 */
+	@Override
+	public List<Gathering> selectAllMyGathering(String email) {
+		
+		return getGatheringMapper().selectAllMyGathering(email);
+	}
+	
+	/**
+	 * 모임 검색
+	 * @param gid
+	 * @return
+	 */
+	@Override
+	public Gathering selectGathering(Integer gid) {
+		
+		return getGatheringMapper().selectGathering(gid);
+	}
+	
+	/**
+	 * 회원의 이메일과 모임시퀀스를 이용한 회원 등급 검색
+	 */
+	@Override
+	public RegistGathering selectRegistGathering(Map<String, Object> gatheringInfo) {
+		
+		return getRegistGatheringMapper().selectRegistGathering(gatheringInfo);
+	}
+
+	/**
+	 * 모임관계 추가
+	 * @param registGathering
+	 * @return
+	 */
+	@Override
+	public Integer insertRegistGathering(RegistGathering registGathering) {
+		
+		return getRegistGatheringMapper().insertRegistGathering(registGathering);
+	}
+
+	/**
+	 * 모임 탈퇴하기
+	 */
+	@Override
+	public Integer deleteRegistGathering(RegistGathering registGathering) {
+		
+		return getRegistGatheringMapper().deleteRegistGathering(registGathering);
+	}
+
+	/**
+	 * 모임 검색(검색조건에 의한)
+	 * @param searchGathering
+	 * @return
+	 */
+	@Override
+	public List<Gathering> selectSearchGathering(Gathering searchGathering) {
+		return getGatheringMapper().selectSearchGathering(searchGathering);
+	}
+
+	/**
+	 * 회원의 이메일을 이용한 회원 가입모임 리스트
+	 * @param email
+	 * @return
+	 */
+	@Override
+	public List<RegistGathering> selectRegistGatheringList(String email) {
+
+		return getRegistGatheringMapper().selectRegistGatheringList(email);
+	}
+
+	/**
+	 * 모임에 가입한 멤버리스트
+	 * @param gid
+	 * @return
+	 */
+	@Override
+	public List<Member> selectGatheringMembers(int gid) {
+		return getGatheringMapper().selectGatheringMembers(gid);
+	}
+
+	/**
+	 * 모임정보 수정
+	 * @param gid
+	 * @return
+	 */
+	@Override
+	public Integer updateGathering(Gathering gathering) {
+		return getGatheringMapper().updateGathering(gathering);
+	}
+
+}

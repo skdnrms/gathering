@@ -1,0 +1,27 @@
+package kr.kosta.gathering.member.mapper;
+
+import kr.kosta.gathering.member.domain.Member;
+
+public interface MemberMapper {
+
+	/**
+	 * 이메일 조회로 사용자 찾기
+	 * @param email
+	 * @return
+	 */
+	public Member selectMember(String email);
+	
+	/**
+	 * 멤버 등록하기
+	 * @param member
+	 * @return
+	 */
+	public Integer insertMember(Member member);
+	
+	/**
+	 * 멤버 정보 수정하기
+	 * @param member
+	 * @return
+	 */
+	public Integer updateMember(Member member);
+}

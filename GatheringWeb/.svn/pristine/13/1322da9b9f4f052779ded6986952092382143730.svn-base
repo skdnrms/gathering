@@ -1,0 +1,57 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<%@ include file="common/common.jsp"%>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#loginBtn").click(function() {
+			
+			var email = $("#email").val();
+			var password = $("#password").val();
+			
+			if(email.length === 0 || password.length === 0) {
+				$("#isInfo").text("ID or 비밀번호가 공란입니다.");
+			} else {
+				var request = $.ajax({
+					url: "userfilter.ajax"
+					, type: "post"
+					, data: {"email" : email, "password" : password}
+					, datatype: "html"
+				});
+				
+				request.done(function(data) {
+					if(data == "useableId") {
+						$("#isInfo").text("등록되지 않은 아이디입니다.");
+					} else if(data == "failPassword") {
+						$("#isInfo").text("비밀번호가 틀렸습니다");
+					} else if(data == "success"){
+						location.href="/GatheringWeb";
+					} 
+				});
+			}
+		});
+	});
+</script>
+</head>
+<body>
+	<div class="col-lg-6 col-lg-offset-4">
+		<form class="form-signin" method="post">
+			<h2 class="form-signin-heading">소모임</h2>
+			<div class="row form-group">
+				<div class="col-md-6">
+					<input type="email" class="form-control" placeholder="Email address" id="email" name="email" autofocus>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-6">
+					<input type="password" class="form-control" placeholder="password" id="password" name="password">
+				</div>
+			</div>
+			<br><b><label class="text-warning" id="isInfo"></label></b><br>
+			<input type="button" class="btn btn-lg btn-primary" id="loginBtn" value="로그인"><!-- 연결 -->
+			<input type="button" class="btn btn-lg btn-warning" value="회원가입" onclick="location.href='${ContextPath}/join'"><!-- 연결 -->
+		</form>
+	</div>
+</body>
+</html>

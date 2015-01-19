@@ -1,0 +1,114 @@
+package kr.kosta.gathering;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import kr.kosta.gathering.alarm.domain.IdentifiedNotice;
+import kr.kosta.gathering.alarm.service.AlarmManager;
+import kr.kosta.gathering.member.domain.Member;
+import kr.kosta.gathering.member.domain.UserInfo;
+import kr.kosta.gathering.member.service.MemberManager;
+import kr.kosta.gathering.specification.domain.Curriculum;
+import kr.kosta.gathering.specification.domain.Notice;
+import kr.kosta.gathering.specification.service.SpecManager;
+import kr.kosta.gathering.util.ConvertUtil;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+public class MainController {
+	
+	@Autowired
+	private MemberManager memberManager;
+	
+	@Autowired
+	private SpecManager specManager;
+	
+	@Autowired
+	private AlarmManager alarmManager;
+	
+	@RequestMapping("/")
+	public String index(HttpSession session, Model model) {
+
+		Member user = (Member)session.getAttribute(UserInfo.LOGIN_INFO);
+		
+		if(user == null) {
+			
+			return "index";
+		} else {
+			// 날짜 형변환
+			if (user.getBirthday() != null) {
+				String birthday = ConvertUtil.DSconverting(user.getBirthday(), "yy.MM.dd");
+				model.addAttribute("birthday", birthday);
+			}
+			
+			Map<String, Object> info = new HashMap<String, Object>();
+			info.put("email", user.getEmail());
+			info.put("period", 7);
+			
+			/* 1) 공지사항 알림 로직 */
+			
+			// 일주일 간의 가입한 모임의 공지사항 읽어오기
+			List<Notice> notices = specManager.selectPeriodNotices(info);
+			
+			// 로그인 유저의 확인한 공지사항 읽어오기 
+			List<IdentifiedNotice> identifiedNotice = alarmManager.selectAllIdentifiedNotice(user.getEmail());
+			
+			// '확인한 공지사항'에 '등록된 공지사항(일주일)'이 같은 경우 삭제
+			if (notices.size() > 0 && identifiedNotice.size() > 0) {
+				for (IdentifiedNotice noticeAlarm : identifiedNotice) {
+					for (Notice notice : notices) {
+						if (notice.getGid() == noticeAlarm.getGid() && notice.getNid() == noticeAlarm.getNid()) {
+							notices.remove(notices.indexOf(notice));
+							break;
+						}
+					}
+				}
+			}
+
+			if(!notices.isEmpty()) {
+				
+				int noticeCnt = notices.size();
+				model.addAttribute("newNotice", notices);
+				model.addAttribute("noticeCnt", noticeCnt);
+			}
+			
+			/* 2) 새로운 멤버 알림 로직 */
+			
+			List<Member> members = memberManager.selectMembers(info);
+			
+			if(!members.isEmpty()) {
+				model.addAttribute("newMembers", members);
+			}
+			
+			return "client/main";
+		}
+	}
+	
+	@RequestMapping("gatheringDate.ajax")
+	@ResponseBody
+	public List<Curriculum> gatheringDate(@RequestParam String[] gid) {
+		if (gid != null && gid.length != 0) {
+			return specManager.selectUserCurriculums(gid);
+		} else {
+			List<Curriculum> selectUserCurriculums = new ArrayList<Curriculum>(1);
+			selectUserCurriculums.add(new Curriculum());
+			return selectUserCurriculums;
+		}
+	}
+	
+	@RequestMapping(value="join")
+	public String joinPage() {
+		
+		return "join/join";
+	}
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.kosta.gathering.specification.mapper.NoticeMapper">
+
+	<insert id="insertNotice" parameterType="Notice">
+		INSERT INTO notice(gid, title, comment, email, regist_date)
+		VALUES(#{gid}, #{title}, #{comment}, #{email}, sysdate())
+		<selectKey keyProperty="nid" resultType="Integer" order="AFTER">
+				SELECT LAST_INSERT_ID()
+			</selectKey>
+	</insert>
+	
+	<select id="selectNotice" parameterType="Integer" resultType="Notice">
+		SELECT gid
+		, nid
+		, title
+		, comment
+		, email
+		, regist_date
+		FROM notice
+		WHERE nid = #{nid}
+		
+	</select>
+	
+	<select id="selectAllNotice" parameterType="Integer" resultType="Notice">
+		SELECT gid
+		, nid
+		, title
+		, comment
+		, email
+		, regist_date
+		FROM notice
+		WHERE gid = #{gid}
+	</select>
+	
+	<select id="selectPeriodNotices" parameterType="map" resultType="Notice">
+		SELECT gid
+		, nid
+		, title
+		, comment
+		, email
+		, regist_date
+		FROM notice
+		WHERE gid IN (SELECT rs.gid
+						FROM regis_gathering rs
+						WHERE email = #{email} and grade != 'M') 
+		AND regist_date BETWEEN(now() - interval #{period} day) AND now()
+	</select>
+  
+</mapper>

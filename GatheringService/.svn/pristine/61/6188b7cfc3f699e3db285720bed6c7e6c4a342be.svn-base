@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.kosta.gathering.reunion.mapper.RegistGatheringMapper">
+	
+	<insert id="insertRegistGathering" parameterType="RegistGathering">
+		INSERT INTO regis_gathering(email, gid, grade)
+		VALUES (#{email}, #{gid}, #{grade})
+	</insert>
+	
+	<delete id="deleteRegistGathering" parameterType="RegistGathering">
+		DELETE FROM regis_gathering
+		WHERE gid = #{gid} AND email = #{email}
+	</delete>
+	
+	<select id="selectRegistGathering" parameterType="map" resultType="RegistGathering">
+		SELECT *
+		FROM regis_gathering
+		WHERE gid = #{gid} AND email = #{email}
+	</select>
+	
+	<select id="selectRegistGatheringList" parameterType="String" resultType="RegistGathering">
+		SELECT *
+		FROM regis_gathering
+		WHERE email = #{email}
+	</select>
+	
+</mapper>

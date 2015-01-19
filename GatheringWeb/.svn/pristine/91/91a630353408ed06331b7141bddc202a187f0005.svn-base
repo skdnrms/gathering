@@ -1,0 +1,158 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>공지사항</title>
+<%@ include file="../common/common.jsp"%>
+<script type="text/javascript">
+
+	var noticeCnt = 1000; // 아코디언 효과용
+	var identifiedNoticeCnt; // 네비게이션 공지사항 숫자 표시용
+	
+	$(document).ready(function() {
+		
+		identifiedNoticeCnt = $(".badge.pull-right.noticeAlarm").length;
+		
+		$("#noticeCnt").val(identifiedNoticeCnt);
+		
+		$("#saveBtn").click(function() {
+			
+			var gid = $("#gid").val();
+			var title = $("#title").val();
+			var comment = $("#comment").val();
+			
+			if(title.length <= 0 || comment.length <= 0) {
+				alert("공란이 존재합니다");
+			} else {
+				
+				var request = $.ajax({
+					url: "notice/addNotice.ajax"
+					, type: "post"
+					, data: {"gid"  :gid, "title" : title, "comment" : comment}
+					, datatype: "html"
+				});
+				
+				request.done(function(data) {
+					if(data != null) {
+						alert(noticeCnt);
+						$("#accordion").append("<div class='panel panel-default'><div class='panel-heading'><h4 class='panel-title'>"
+							 + "<a data-toggle='collapse' data-parent='#accordion' href='#collapse" + noticeCnt + "'>" + data.title + "</a>" 
+							 + "<span class='pull-right'><h5>등록일:&nbsp;" + data.formatDate + "</h5></span></h4></div>"
+							 + "<div id='collapse" + noticeCnt + "' class='panel-collapse collapse'>"
+							 + "<div class='panel-body'>" + data.comment + "</div></div></div>");
+
+						$("#title").val("");
+						$("#comment").val("");
+						$("#myModal").modal("hide");
+						
+						noticeCnt++;
+					}
+				});
+			}
+		});
+	});
+	// 확인된 공지사항의 view 및 ajax 처리
+	function hiddenNewTag(element) {
+		
+		var newNotice = $(element).parents(".panel-title").children(".badge.pull-right.noticeAlarm");
+		var noticeInfo = $(element).parents(".panel-title").children("[type='hidden']");
+		
+		if($(newNotice).text() != "") {
+			var nid = $(noticeInfo[0]).val();
+			var gid = $(noticeInfo[1]).val();
+			
+			var request = $.ajax({
+				url: "identifiedNotice.ajax"
+				, type: "get"
+				, data: {"nid" : nid, "gid" : gid}
+				, datatype: "html"
+			});
+		}
+		
+		$(newNotice).remove();
+	}
+	
+</script>
+</head>
+<body>
+	<%@ include file="../common/navigation.jsp"%>
+
+	<div class="col-lg-2" id="reunionNavi">
+		<c:set var="reunionNaviActive" value="notice"></c:set>
+		<%@ include file="reunion-navi.jsp"%>
+	</div>
+	<div class="col-lg-8">
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<input class="form-control" type="text" placeholder="제목" id="title">
+						<input type="hidden" id="gid" value="${gathering.gid }">
+					</div>
+					<div class="modal-body">
+						<textarea class="form-control" rows="3" placeholder="내용" id="comment"></textarea>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" id="saveBtn">Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 본문 -->
+		<fieldset>
+		<legend>
+			<h2>
+			Notice
+			<c:if test="${grade eq 'M' }">
+			<button type="button" class="pull-right btn btn-default" data-toggle="modal" data-target="#myModal">
+			<span class="glyphicon glyphicon-pencil"></span>
+			</button>
+			</c:if>
+			</h2>
+		</legend>
+		<div class="panel panel-default">
+			<!-- Default panel contents -->
+			<div class="panel-heading">
+				<ul class="nav nav-pills">
+					<li>총 누적 회비&nbsp;&nbsp;<span class="badge">추후 공지</span></li>
+				</ul>
+			</div>
+			<div class="panel-group" id="accordion">
+			<c:if test="${notices ne null}">
+				<c:forEach items="${notices }" var="notice" varStatus="chap">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" 
+									href="#collapse${chap.count }" onclick="hiddenNewTag(this)">
+								${notice.title }
+								</a> 
+								<!-- <button type='button' class='btn btn-default pull-right' onclick="deleteNotice(this)">
+								<span class='glyphicon glyphicon-trash'></span>
+								</button> -->
+								<input type="hidden" value="${notice.nid }">
+								<input type="hidden" value="${notice.gid }">
+								
+								<c:if test="${notice.identified ne true &&  grade ne 'M'}">
+								<span class="badge pull-right noticeAlarm">n</span>
+								</c:if>
+								
+								<%-- <span class="pull-right">등록일:&nbsp;${notice.formatDate }</span> --%>
+							</h4>
+						</div>
+						<div id="collapse${chap.count }" class="panel-collapse collapse">
+							<div class="panel-body">${notice.comment }</div>
+						</div>
+					</div>
+				</c:forEach>
+			</c:if>
+			</div>
+		</div>
+		</fieldset>
+	</div>
+</body>
+</html>

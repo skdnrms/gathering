@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.kosta.gathering.specification.mapper.QnaMapper">
+
+	<!-- QnA 등록하기 -->
+	<insert id="insertQna" parameterType="Qna">
+		insert into qna(gid, comment, regist_date, email)
+		values(#{gid}, #{comment}, now(), #{email})
+		
+		<selectKey keyProperty="qid" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<!-- 소모임의 QnA 조회 -->
+	<select id="selectAllQna" parameterType="int" resultType="Qna">
+		SELECT gid
+			,qid
+			,comment
+			,regist_date AS registDate
+			,email
+		FROM qna
+		WHERE gid = #{gid}
+		ORDER BY qid DESC
+	</select>
+	
+	<!-- QnA 단권 조회 -->
+	<select id="selectQna" parameterType="int" resultType="Qna">
+		SELECT gid
+			,qid
+			,comment
+			,regist_date AS registDate
+			,email
+		FROM qna
+		WHERE qid = #{qid}
+	</select>
+	
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.kosta.gathering.member.mapper.MemberMapper">
+ 
+ <!-- 이메일 조회로 사용자 찾기 -->
+ <select id="selectMember" parameterType="String" resultType="Member">
+	SELECT * FROM member
+	WHERE email = #{email}
+</select>
+
+<select id="selectMembers" parameterType="map" resultType="Member">
+	SELECT *
+	FROM member
+	WHERE email IN (SELECT rs.email
+					FROM regis_gathering rs
+					WHERE rs.gid IN (SELECT gid
+									FROM regis_gathering
+									WHERE email = #{email}))
+	AND regist_date BETWEEN(now() - interval #{period} day) AND now()
+</select>
+
+ <!-- 회원 등록하기 -->
+ <insert id="insertMember" parameterType="Member">
+ 	INSERT INTO member(email, password, name, phone, birthday, gender, location, regist_date)
+ 	VALUES(#{email}, #{password}, #{name}, #{phone}, #{birthday}, #{gender}, #{location}, NOW())
+ </insert>
+ 
+ <update id="updateMember" parameterType="Member">
+ 	update member set
+ 	photo = #{photo}
+ 	, password = #{password}
+ 	, phone = #{phone}
+ 	, gender = #{gender}
+ 	, location = #{location}
+ 	where email = #{email}
+ </update>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<!-- data source -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" >
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost/gathering" />
+		<property name="username" value="kosta1" />
+		<property name="password" value="kosta1" />
+		<property name="defaultAutoCommit" value="false" />	
+	</bean>
+	
+	<!-- MyBatis 설정 
+		SqlSessionFactory를 생성하기 위한 FactoryBean설정이다. 
+		이빈을 사용해서 스프링은 SqlSessionFactory 객체를 한 번만 생성한다.  
+	 -->
+	<bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="typeAliasesPackage" value="kr.kosta.gathering"/>
+		<property name="dataSource" ref="dataSource" />
+		<!-- <property name="configLocation" value="classpath:/mybatis-config.xml" /> -->
+		<property name="mapperLocations">
+			<array>
+				<value>classpath:/mapper/**/*.xml</value>
+			</array>
+		</property>		
+	</bean>
+	
+	<!-- MyBatis의 SqlSession과 같은 역할을 담담한다. 
+		마이바티스의 SqlSession은 트랙젝션 처리를 위해 commit/rollback 메소드를 명시적으로 호출해야 하지만
+		SqlSessionTemplate은 스프링이 트랜잭션을 대신 처리하게 구조화돼 있기 때문에 commit/rollback 메소드를 
+		명시적으로 호출할 수 없다. 
+		그리고 SqlSession의 메소드에서 던지는 예외 타입이 org.apache.ibatis.exceptions.PersistenceException 이지만
+		SqlSessionTemplate은 스프링의 DataAccessException을 던진다.  
+	 -->
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactoryBean" />
+	</bean>	
+
+
+	<!-- 트랜잭션 관리자 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- Annotation 을 사용한 트랜잭션 사용시 활성화 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+</beans>

@@ -1,0 +1,95 @@
+package kr.kosta.gathering.util;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.springframework.web.multipart.MultipartFile;
+
+public class ConvertUtil {
+
+	public static final String MEMBER_PHOTOPATH  = "resources/shared/img/member/";
+	public static final String GATHERING_PHOTOPATH = "resources/shared/img/group/";
+	
+	/**
+	 * String -> Date 타입 변환
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static Date SDconverting(String date) {
+
+		DateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date ConvertingDate = new Date();
+
+		try {
+			ConvertingDate = sdFormat.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return ConvertingDate;
+	}
+
+	/**
+	 * Date -> String 타입 변환
+	 * @param date
+	 * @return
+	 */
+	public static String DSconverting(Date date, String dateFormat) {
+
+		DateFormat dsFormat = new SimpleDateFormat(dateFormat);
+		String ConvertingDate = new String();
+
+		ConvertingDate = dsFormat.format(date);
+
+		return ConvertingDate;
+	}
+	
+	public static String savePhoto(MultipartFile file, String path) {
+		
+		String fileName = null;
+		File copyImage = null;
+		InputStream is = null;
+		OutputStream os = null;
+		
+		try {
+			fileName = file.getOriginalFilename();
+				copyImage = new File(path + fileName);
+			is = file.getInputStream();
+			os = new FileOutputStream(copyImage);
+			
+			
+			int len = 0;
+			byte[] buf = new byte[1024];
+			//System.out.println(">>>" + is.read());
+			while((len = is.read(buf, 0, 1024)) != -1) {
+				os.write(buf, 0, len);
+				os.flush();
+			}
+			
+			is.close();
+			os.close();
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		
+		return copyImage.getName();
+	}
+	
+	
+	public static File loadPhoto(String path) {
+		
+		return null;
+	}
+	
+}

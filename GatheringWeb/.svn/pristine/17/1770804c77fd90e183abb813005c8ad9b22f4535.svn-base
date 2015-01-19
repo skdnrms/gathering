@@ -1,0 +1,42 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>소모임 멤버</title>
+<%@ include file="../common/common.jsp"%>
+</head>
+<body>
+	<%@ include file="../common/navigation.jsp"%>
+	
+	<div class="col-lg-2" id="reunionNavi">
+		<c:set var="reunionNaviActive" value="memberlist"></c:set>
+		<%@ include file="reunion-navi.jsp"%>
+	</div>
+	
+	<div class="col-lg-8">
+		<div class="bs-component">
+			<h2> Members </h2>
+		</div>
+		
+		<ul class="nav nav-pills">
+			<li>모임장<span class="badge">홍길동</span></li>
+			<li>멤버 수 <span class="badge">${gathering.gatheringMembersNum}</span></li>
+		</ul>
+		
+		<c:forEach var="member" items="${gathering.gatheringMembers}">
+			<div class="col-xs-6 col-md-3">
+				<%-- <a href="${ContextPath}/gathering/group?gid=${member.gid}"> --%>
+					<div class="thumbnail gatheringBox">
+						<img class="img-rounded" src="${ContextPath}/resources/shared/img/member/${member.photo}">
+						<div class="caption">
+							<h3 class="ellipsis"><nobr>${member.name}</nobr></h3>
+							<p class="ellipsis"><nobr>${member.email}</nobr></p>
+						</div>
+					</div>
+				<!-- </a> -->
+			</div>
+		</c:forEach>
+	</div>
+</body>
+</html>
